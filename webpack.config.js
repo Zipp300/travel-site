@@ -22,8 +22,15 @@ module.exports = {
     filename: 'bundled.js',
     path: path.resolve(__dirname, 'app')
   },
+  devServer: {
+    
+    //contentBase: path.join(__dirname, 'app'),
+    static: {directory: path.join(__dirname, "app")},
+    hot: true,
+    port: 3000,
+    historyApiFallback: { index: "index.html" }
+  },
   mode: 'development',
-  watch: true,
   module: {
     rules: [
       {
