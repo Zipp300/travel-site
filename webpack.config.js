@@ -10,6 +10,7 @@ const path = require('path')
 
 const postCSSPlugins = [
   'postcss-import',
+  'postcss-mixins',
   'postcss-simple-vars',
   'postcss-nested',
   'autoprefixer'
