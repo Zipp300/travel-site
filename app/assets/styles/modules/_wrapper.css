@@ -13,5 +13,14 @@
     margin-left: 0;
     margin-right: 0;
   }
+
+  &--b-margin {
+    margin-bottom: 1rem;
+
+    @mixin atSmall {
+      margin-bottom: 3.875rem;
+    }
+  }
+  
 }
 
