@@ -3,6 +3,7 @@ const path = require("path")
 const { CleanWebpackPlugin } = require("clean-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
+const fse = require("fs-extra")
 
 const postCSSPlugins = [
   "postcss-import",
@@ -27,15 +28,25 @@ let cssConfig = {
   ],
 }
 
+// * Crear una variable que sirva para cualquier Html file -> retorna un array
+let pages = fse
+  .readdirSync("./app")
+  .filter(function (file) {
+    return file.endsWith(".html")
+  })
+  .map(function (page) {
+    //* Es un HtmlWebpackPlugin Plugin para cada Html page
+    //* El html que se va a generar desde un "template" -> "dev" / "build"
+    //* & Insertarle los Links apropiados a los Css y Js
+    return new HtmlWebpackPlugin({
+      filename: page,
+      template: `./app/${page}`,
+    })
+  })
+
 let config = {
   entry: "./app/assets/scripts/App.js",
-  // * El html que se va a generar desde un "template" -> "dev" / "build"
-  plugins: [
-    new HtmlWebpackPlugin({
-      filename: "index.html",
-      template: "./app/index.html",
-    }),
-  ],
+  plugins: pages,
   module: {
     rules: [cssConfig],
   },
