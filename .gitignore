@@ -12,6 +12,7 @@
 node_modules/
 .tmp/
 .vscode/
+dist/
 
 # OS or Editor folders
 .DS_Store

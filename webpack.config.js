@@ -13,6 +13,15 @@ const postCSSPlugins = [
   "autoprefixer",
 ]
 
+// * Create our own Webpack Plugin
+class RunAfterCompile {
+  apply(compiler) {
+    compiler.hooks.done.tap("Copy Images", function () {
+      fse.copySync("app/assets/images", "dist/assets/images")
+    })
+  }
+}
+
 let cssConfig = {
   test: /\.css$/i,
   use: [
@@ -68,6 +77,17 @@ if (currentTask == "dev") {
   config.mode = "development"
 }
 if (currentTask == "build") {
+  // * Adding another Webpack Module rule
+  config.module.rules.push({
+    test: /\.js$/,
+    exclude: /(node_modules)/,
+    use: {
+      loader: "babel-loader",
+      options: {
+        presets: [["@babel/preset-env", { targets: { node: "16" } }]],
+      },
+    },
+  })
   // * Extract el CSS out of the generate JS
   cssConfig.use.unshift(MiniCssExtractPlugin.loader)
   // * El CSS resultante de los PostCSS plugIns se comprime al final
@@ -85,7 +105,8 @@ if (currentTask == "build") {
   // * Extraer el CSS y generar chunk Hash files
   config.plugins.push(
     new CleanWebpackPlugin(),
-    new MiniCssExtractPlugin({ filename: "styles.[chunkhash].css" })
+    new MiniCssExtractPlugin({ filename: "styles.[chunkhash].css" }),
+    new RunAfterCompile()
   )
 }
 
